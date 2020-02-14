@@ -69,7 +69,12 @@ async function fetch() {
     try {
         const response = await superagent.get('http://challenge01.root-me.org/programmation/ch1/')
         var html = response.text;
-        // console.log(html);
+        
+        var cookies = "vary: 'Accept-Encoding', 'set-cookie':'[ " + response.headers['set-cookie'] + " ]"
+        // var cookies = response.header.vary
+        console.log(response);
+        cookies = JSON.stringify(cookies)
+        console.log(cookies)
 
         var url;
 
@@ -85,32 +90,31 @@ async function fetch() {
 
         res = calculate(u0, op1, op2, limit, sign)
         url = 'http://challenge01.root-me.org/programmation/ch1/ep1_v.php?result=' + res
-        console.log(res)
+        console.log(url)
 
         request({
             url: url,
             method: "GET",
             header: {
-                'Cookie': cookie
+                'set-cookie': cookies
             }
         }, function (err, response) {
             console.log(response.headers) // one of the headers says user is not authorised
         })
 
 
-        // function reqListener () {
-        //     console.log(this.responseText);
-        //   }
+        function reqListener () {
+            console.log(this.responseText);
+          }
 
-        //   var oReq = new XMLHttpRequest();
-        //   oReq.onload = reqListener;
-        //   oReq.open("get", url, false,);
-        //   oReq.send();
+          var oReq = new XMLHttpRequest();
+          oReq.onload = reqListener;
+          oReq.open("get", url, false,);
+          oReq.send();
 
     } catch (error) {
-        console.log(error);
+        console.log('error :  ' + error);
     }
 }
-
 
 fetch();
