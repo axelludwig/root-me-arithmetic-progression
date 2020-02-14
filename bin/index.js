@@ -70,11 +70,12 @@ async function fetch() {
         const response = await superagent.get('http://challenge01.root-me.org/programmation/ch1/')
         var html = response.text;
         
-        var cookies = "vary: 'Accept-Encoding', 'set-cookie':'[ " + response.headers['set-cookie'] + " ]"
+        // var cookies = "vary: 'Accept-Encoding', 'set-cookie':'[ " + response.headers['set-cookie'] + " ]"
+        cookies = response.headers['set-cookie']
         // var cookies = response.header.vary
-        console.log(response);
+        // console.log(response);
         cookies = JSON.stringify(cookies)
-        console.log(cookies)
+        // console.log(cookies)
 
         var url;
 
@@ -89,11 +90,13 @@ async function fetch() {
         // console.log(calculate(5, 10, -10, 3, '+'))
 
         res = calculate(u0, op1, op2, limit, sign)
-        url = 'http://challenge01.root-me.org/programmation/ch1/ep1_v.php?result=' + res
-        console.log(url)
+        url = 'http://challenge01.root-me.org/programmation/ch1'
+        var path = '/ep1_v.php?result=' + res
+        // console.log(url)
 
         request({
             url: url,
+            path: path,
             method: "GET",
             header: {
                 'set-cookie': cookies
