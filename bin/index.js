@@ -90,13 +90,14 @@ async function fetch() {
         // console.log(calculate(5, 10, -10, 3, '+'))
 
         res = calculate(u0, op1, op2, limit, sign)
-        url = 'http://challenge01.root-me.org/programmation/ch1'
-        var path = '/ep1_v.php?result=' + res
+        // url = 'http://challenge01.root-me.org/programmation/ch1'
+        // var path = '/ep1_v.php?result=' + res
+        url = 'http://challenge01.root-me.org/programmation/ch1/ep1_v.php?result=' + res;
         // console.log(url)
 
         request({
             url: url,
-            path: path,
+            // path: path,
             method: "GET",
             header: {
                 'set-cookie': cookies
