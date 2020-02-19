@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-const superagent = require('superagent');
+var superagent = require('superagent');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var request = require('request');
+var Agent = require('agentkeepalive');
 
 function getop1(s) {
     var i = 0;
@@ -67,14 +68,24 @@ function calculate(u0, op1, op2, limit, sign) {
 
 async function fetch() {
     try {
+        var keepaliveAgent = new Agent({
+            maxSockets: 100,
+            maxFreeSockets: 10,
+            timeout: 60000,
+            keepAliveTimeout: 30000 // free socket keepalive for 30 seconds
+        });
+
+        superagent.agent = keepaliveAgent;
         const response = await superagent.get('http://challenge01.root-me.org/programmation/ch1/')
         var html = response.text;
-        
+
+
+
         // var cookies = "vary: 'Accept-Encoding', 'set-cookie':'[ " + response.headers['set-cookie'] + " ]"
-        cookies = response.headers['set-cookie']
+        // cookies = response.headers['set-cookie']
         // var cookies = response.header.vary
         // console.log(response);
-        cookies = JSON.stringify(cookies)
+        // cookies = JSON.stringify(cookies)
         // console.log(cookies)
 
         var url;
@@ -99,22 +110,22 @@ async function fetch() {
             url: url,
             // path: path,
             method: "GET",
-            header: {
-                'set-cookie': cookies
+            header: { 
+                // 'set-cookie': cookies
             }
         }, function (err, response) {
             console.log(response.headers) // one of the headers says user is not authorised
         })
 
 
-        function reqListener () {
+        function reqListener() {
             console.log(this.responseText);
-          }
+        }
 
-          var oReq = new XMLHttpRequest();
-          oReq.onload = reqListener;
-          oReq.open("get", url, false,);
-          oReq.send();
+        var oReq = new XMLHttpRequest();
+        oReq.onload = reqListener;
+        oReq.open("get", url, false);
+        oReq.send();
 
     } catch (error) {
         console.log('error :  ' + error);
